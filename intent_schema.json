@@ -1,0 +1,43 @@
+{
+  "intents": [
+    {
+      "intent": "LogTimeIntent",
+      "slots": [
+        {
+          "name": "TicketNumber",
+          "type": "JIRA_TICKET"
+        },
+        {
+          "name": "TimeLog",
+          "type": "JIRA_TIME_LOG"
+        },
+        {
+          "name": "Message",
+          "type": "JIRA_TICKET"
+        }
+      ]
+    },
+    {
+      "slots": [
+        {
+          "name": "TicketNumber",
+          "type": "JIRA_TICKET"
+        },
+        {
+          "name": "Message",
+          "type": "JIRA_TICKET"
+        }
+      ],
+      "intent": "AddCommentIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    }
+  ]
+}
