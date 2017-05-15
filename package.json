@@ -1,0 +1,16 @@
+{
+  "name": "flareapi_alexa",
+  "version": "1.0.0",
+  "description": "Flare api for jira",
+  "main": "index.js",
+  "dependencies": {
+    "alexa-sdk": "^1.0.9",
+    "https": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "nav dhuti",
+  "license": "ISC"
+}
