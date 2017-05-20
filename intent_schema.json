@@ -1,34 +1,49 @@
 {
   "intents": [
     {
-      "intent": "LogTimeIntent",
       "slots": [
         {
           "name": "TicketNumber",
           "type": "JIRA_TICKET"
-        },
-        {
-          "name": "TimeLog",
-          "type": "JIRA_TIME_LOG"
-        },
-        {
-          "name": "Message",
-          "type": "JIRA_TICKET"
         }
-      ]
+      ],
+      "intent": "AddTimeLogIntent"
     },
     {
       "slots": [
         {
           "name": "TicketNumber",
           "type": "JIRA_TICKET"
-        },
+        }
+      ],
+      "intent": "AddCommentIntent"
+    },
+    {
+      "slots": [
         {
           "name": "Message",
           "type": "JIRA_TICKET"
         }
       ],
-      "intent": "AddCommentIntent"
+      "intent": "AddMessageIntent"
+    },
+    {
+      "slots": [
+        {
+          "name": "TicketNumber",
+          "type": "JIRA_TICKET"
+        }
+      ],
+      "intent": "AddTicketNumberIntent"
+    },
+    {
+      "slots": [
+        {
+          "name": "TimeLog",
+          "type": "JIRA_TICKET"
+        }
+      ],
+      "intent": "AddTimeIntent"
     },
     {
       "intent": "AMAZON.HelpIntent"

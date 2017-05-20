@@ -1,6 +1,6 @@
-AddCommentIntent comment on a ticket number {TicketNumber}
+AddTimeLogIntent log time on ticket {TicketNumber}
 AddCommentIntent comment on ticket {TicketNumber}
-LogTimeIntent log time on ticket {TicketNumber}
-LogTimeIntent log time for ticket {TicketNumber}
-LogTimeIntent log {TimeLog} for ticket {TicketNumber}
-LogTimeIntent log {TimeLog} on ticket {TicketNumber}
+AddMessageIntent say {Message}
+AddMessageIntent write {Message}
+AddTicketNumberIntent ticket number {TicketNumber}
+AddTimeIntent log {TimeLog}
