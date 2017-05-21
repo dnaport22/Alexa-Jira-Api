@@ -3,4 +3,4 @@ AddCommentIntent comment on ticket {TicketNumber}
 AddMessageIntent say {Message}
 AddMessageIntent write {Message}
 AddTicketNumberIntent ticket number {TicketNumber}
-AddTimeIntent log {TimeLog}
+AddTimeIntent {TimeLog}

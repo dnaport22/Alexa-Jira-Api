@@ -8,45 +8,22 @@ function Controller () {
 
 Controller.prototype.addComment = function (ticket, comment) {
   var data = {
-    "comment": "Sample comments from alexa",
-    "issue": "TP-1"
+    "comment": comment,
+    "issue": ticket
   };
 
   var req = http.request(this.getOptions(), function(res) {
     res.on('data', function(body) {
       if (body.toString() == 'true') {
-        this.RESPONSE = 'Comment added.';
+        this.setResponse('Comment added.');
       }
     });
   });
 
   req.on('error', function(e) {
-    this.RESPONSE = 'Error occurred while adding comment.';
+    this.setResponse('Error occurred while adding comment.');
   });
 
-  //req.write(JSON.stringify(data));
-  req.end(JSON.stringify(data));
-};
-
-Controller.prototype.addComment = function (ticket, comment) {
-  var data = {
-    "comment": "Sample comments from alexa",
-    "issue": "TP-1"
-  };
-
-  var req = http.request(this.getOptions(), function(res) {
-    res.on('data', function(body) {
-      if (body.toString() == 'true') {
-        this.RESPONSE = 'Comment added.';
-      }
-    });
-  });
-
-  req.on('error', function(e) {
-    this.RESPONSE = 'Error occurred while adding comment.';
-  });
-
-  //req.write(JSON.stringify(data));
   req.end(JSON.stringify(data));
 };
 
@@ -90,6 +67,10 @@ Controller.prototype.getResponse = function () {
   return this.RESPONSE;
 };
 
+Controller.prototype.setResponse = function (res) {
+  this.RESPONSE = res;
+};
+
 Controller.prototype.getHostname = function () {
   return this._HOSTNAME;
 };
@@ -98,4 +79,4 @@ Controller.prototype.getCommentPath = function () {
   return this._COMMENT_PATH;
 };
 
-module.exports = new Controller();
+module.exports = Controller;

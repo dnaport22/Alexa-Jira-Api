@@ -35,13 +35,12 @@ var handlers = {
   },
   'AddCommentIntent': function () {
     this.attributes['call_type'] = 1;
+    this.attributes['emit_ask'] = this.t('ASK_MESSAGE_BODY');
     var intentObj = this.event.request.intent;
     if (!intentObj.slots.TicketNumber.value) {
-      this.attributes['emit_ask'] = this.t('ASK_MESSAGE_BODY');
       this.emit(':ask', this.t('ASK_TICKET_NUMBER'));
     } else {
       this.attributes['ticket'] = intentObj.slots.TicketNumber.value;
-      Controller.addComment('ele2', 'sample');
       this.emit(':ask', this.t('ASK_MESSAGE_BODY'));
     }
   },
@@ -92,8 +91,10 @@ var handlers = {
 
   },
   'AMAZON.YesIntent': function() {
+    var ctr = new Controller(this);
     if (this.attributes['call_type'] == 1) {
-      this.emit(':ask', 'Adding ' + this.attributes['msg'] + ' on ticket number' + this.attributes['ticket']);
+      ctr.addComment(this.attributes['ticket'], this.attributes['msg']);
+      this.emit(':tell', ctr.getResponse());
     } else {
       this.emit(':ask', 'Logging ' + this.attributes['time_log'] + ' on ticket number' + this.attributes['ticket']);
     }
