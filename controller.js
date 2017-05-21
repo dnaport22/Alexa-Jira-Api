@@ -1,8 +1,8 @@
 var http = require('https');
 
 function Controller () {
-  this._HOSTNAME = 'alexajira.herokuapp.com';
-  this._COMMENT_PATH = '/jiraapi?type=comment';
+  this._HOSTNAME = //;
+  this._COMMENT_PATH = //;
   this.RESPONSE = 'Nothing happened.';
 }
 

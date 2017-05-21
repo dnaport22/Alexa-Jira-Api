@@ -3,7 +3,7 @@
 const Alexa = require('alexa-sdk');
 const Controller = require('./controller.js');
 
-const APP_ID = 'amzn1.ask.skill.81b17d35-dc50-4dfd-9b27-29c2fc49d992';
+const APP_ID = //;
 
 exports.handler = function (event, context, callback) {
   var alexa = Alexa.handler(event, context);
