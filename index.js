@@ -1,7 +1,8 @@
 'use strict';
 
 const Alexa = require('alexa-sdk');
-const Controller = require('./controller.js');
+const controller = require('./controller.js');
+var http = require('https');
 
 const APP_ID = //;
 
@@ -9,7 +10,7 @@ exports.handler = function (event, context, callback) {
   var alexa = Alexa.handler(event, context);
   alexa.appId = APP_ID;
   alexa.resources = languageStrings;
-  alexa.registerHandlers(handlers);
+  alexa.registerHandlers(newSessionHandler, startModeHandler, controller);
   alexa.execute();
 };
 
@@ -19,19 +20,35 @@ var languageStrings = {
       'ASK_TICKET_NUMBER': 'What\'s the ticket number?',
       'ASK_MESSAGE_BODY': 'What do you want me to say',
       'ASK_TIME_TO_LOG': 'How much time you want me to log?',
-      'ASK_AGAIN': 'I did\'t get that, Can you say it again'
+      'ASK_AGAIN': 'I did\'t get that, Can you say it again',
+      'HELP_TEXT': 'Say Log time on ticket or Comment on ticket',
+      'UNHANDLED_TEXT': 'Sorry, I think flare is sleeping.'
     }
   }
 };
 
-var handlers = {
+var states = {
+  STARTMODE: '_STARTMODE'
+};
+
+var newSessionHandler = {
   'NewSession': function () {
     this.attributes['ticket'] = 0;
     this.attributes['msg'] = '';
     this.attributes['time_log'] = 0;
     this.attributes['emit_ask'] = '';
     this.attributes['call_type'] = 0;
-    this.emit('AddCommentIntent');
+    this.handler.state = states.STARTMODE;
+    this.emit(':ask', this.t('HELP_TEXT'));
+  },
+  'Unhandled': function () {
+    this.emit(':tell', this.t('UNHANDLED_TEXT'));
+  }
+};
+
+var startModeHandler = Alexa.CreateStateHandler(states.STARTMODE, {
+  'LaunchRequest': function () {
+    this.emit(':tell', this.t('HELP_TEXT'));
   },
   'AddCommentIntent': function () {
     this.attributes['call_type'] = 1;
@@ -46,9 +63,9 @@ var handlers = {
   },
   'AddTimeLogIntent': function () {
     this.attributes['call_type'] = 2;
+    this.attributes['emit_ask'] = 'ASK_TIME_TO_LOG';
     var intentObj = this.event.request.intent;
     if (!intentObj.slots.TicketNumber.value) {
-      this.attributes['emit_ask'] = 'ASK_TIME_TO_LOG';
       this.emit(':ask', this.t('ASK_TICKET_NUMBER'));
     } else {
       this.attributes['ticket'] = intentObj.slots.TicketNumber.value;
@@ -91,10 +108,8 @@ var handlers = {
 
   },
   'AMAZON.YesIntent': function() {
-    var ctr = new Controller(this);
     if (this.attributes['call_type'] == 1) {
-      ctr.addComment(this.attributes['ticket'], this.attributes['msg']);
-      this.emit(':tell', ctr.getResponse());
+      this.emit('AddComment');
     } else {
       this.emit(':ask', 'Logging ' + this.attributes['time_log'] + ' on ticket number' + this.attributes['ticket']);
     }
@@ -106,6 +121,12 @@ var handlers = {
     } else {
       this.emit(':ask', 'Cancel Logging ' + this.attributes['time_log'] + ' on ticket number' + this.attributes['ticket']);
     }
+  },
+  'SessionEndedRequest': function () {
+    console.log('session ended!');
+    this.emit(':saveState', true);
+  },
+  'Unhandled': function () {
+    this.emit(':tell', this.t('UNHANDLED_TEXT'));
   }
-
-};
+});

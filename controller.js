@@ -1,82 +1,40 @@
-var http = require('https');
+var request = require('request');
+const HOSTNAME = //;
+const COMMENT_PATH =//;
 
-function Controller () {
-  this._HOSTNAME = //;
-  this._COMMENT_PATH = //;
-  this.RESPONSE = 'Nothing happened.';
-}
+var Controller = {
+  'AddComment': function (ticket, comment) {
+    var _this = this;
 
-Controller.prototype.addComment = function (ticket, comment) {
-  var data = {
-    "comment": comment,
-    "issue": ticket
-  };
+    var data = {
+      comment: _this.attributes['msg'],
+      issue: _this.attributes['ticket']
+    };
 
-  var req = http.request(this.getOptions(), function(res) {
-    res.on('data', function(body) {
-      if (body.toString() == 'true') {
-        this.setResponse('Comment added.');
-      }
+    request.post({
+      url: 'http://' + HOSTNAME + COMMENT_PATH,
+      form: data
+    }, function (error, response, body) {
+      _this.emit(':tell', 'comment added');
     });
-  });
+  },
+  'AddTimeLog': function (timelog, ticket, comment) {
+    var _this = this;
 
-  req.on('error', function(e) {
-    this.setResponse('Error occurred while adding comment.');
-  });
+    var data = {
+      "comment":  _this.attributes['msg'],
+      "issue": _this.attributes['ticket'],
+      "timeSpent": _this.attributes['time_log'],
+      "date": new Date()
+    };
 
-  req.end(JSON.stringify(data));
-};
-
-Controller.prototype.addTimeLog = function (timelog, ticket, comment) {
-  var data = {
-    "comment": "Sample comments from alexa",
-    "issue": "TP-1",
-    "timeSpent": timelog,
-    "date": new Date()
-  };
-
-  var req = http.request(this.getOptions(), function(res) {
-    res.on('data', function(body) {
-      if (body.toString() == 'true') {
-        this.RESPONSE = 'Time logged.';
-      }
+    request.post({
+      url: 'http://' + HOSTNAME + COMMENT_PATH,
+      form: data
+    }, function (error, response, body) {
+      _this.emit(':tell', 'time logged');
     });
-  });
-
-  req.on('error', function(e) {
-    this.RESPONSE = 'Error occurred while logging time.';
-  });
-
-  //req.write(JSON.stringify(data));
-  req.end(JSON.stringify(data));
-};
-
-Controller.prototype.getOptions = function () {
-  return options = {
-    'method': 'POST',
-    'hostname': this.getHostname(),
-    'port': null,
-    'path': this.getCommentPath(),
-    'headers': {
-      'content-type': 'application/json'
-    }
-  };
-};
-
-Controller.prototype.getResponse = function () {
-  return this.RESPONSE;
-};
-
-Controller.prototype.setResponse = function (res) {
-  this.RESPONSE = res;
-};
-
-Controller.prototype.getHostname = function () {
-  return this._HOSTNAME;
-};
-
-Controller.prototype.getCommentPath = function () {
-  return this._COMMENT_PATH;
+  }
 };
 
 module.exports = Controller;

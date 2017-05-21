@@ -4,8 +4,10 @@
   "description": "Flare api for jira",
   "main": "index.js",
   "dependencies": {
+    "Buffer": "0.0.0",
     "alexa-sdk": "^1.0.9",
-    "https": "^1.0.0"
+    "https": "^1.0.0",
+    "request": "^2.81.0"
   },
   "devDependencies": {},
   "scripts": {
