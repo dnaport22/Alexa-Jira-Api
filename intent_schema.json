@@ -4,7 +4,7 @@
       "slots": [
         {
           "name": "TicketNumber",
-          "type": "JIRA_TICKET"
+          "type": "AMAZON.NUMBER"
         }
       ],
       "intent": "AddTimeLogIntent"
@@ -13,7 +13,7 @@
       "slots": [
         {
           "name": "TicketNumber",
-          "type": "JIRA_TICKET"
+          "type": "AMAZON.NUMBER"
         }
       ],
       "intent": "AddCommentIntent"
@@ -22,7 +22,7 @@
       "slots": [
         {
           "name": "Message",
-          "type": "JIRA_TICKET"
+          "type": "JIRA_MESSAGE"
         }
       ],
       "intent": "AddMessageIntent"
@@ -31,7 +31,7 @@
       "slots": [
         {
           "name": "TicketNumber",
-          "type": "JIRA_TICKET"
+          "type": "AMAZON.NUMBER"
         }
       ],
       "intent": "AddTicketNumberIntent"
@@ -40,7 +40,7 @@
       "slots": [
         {
           "name": "TimeLog",
-          "type": "JIRA_TICKET"
+          "type": "AMAZON.NUMBER"
         }
       ],
       "intent": "AddTimeIntent"

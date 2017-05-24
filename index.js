@@ -10,7 +10,7 @@ exports.handler = function (event, context, callback) {
   var alexa = Alexa.handler(event, context);
   alexa.appId = APP_ID;
   alexa.resources = languageStrings;
-  alexa.registerHandlers(newSessionHandler, startModeHandler, controller);
+  alexa.registerHandlers(newSessionHandler, controller);
   alexa.execute();
 };
 
@@ -19,16 +19,12 @@ var languageStrings = {
     'translation': {
       'ASK_TICKET_NUMBER': 'What\'s the ticket number?',
       'ASK_MESSAGE_BODY': 'What do you want me to say',
-      'ASK_TIME_TO_LOG': 'How much time you want me to log?',
+      'ASK_TIME_TO_LOG': 'How much time you worked on this ticket?',
       'ASK_AGAIN': 'I did\'t get that, Can you say it again',
-      'HELP_TEXT': 'Say Log time on ticket or Comment on ticket',
+      'HELP_TEXT': 'dna is ready, Say log time or comment on ticket',
       'UNHANDLED_TEXT': 'Sorry, I think flare is sleeping.'
     }
   }
-};
-
-var states = {
-  STARTMODE: '_STARTMODE'
 };
 
 var newSessionHandler = {
@@ -38,23 +34,13 @@ var newSessionHandler = {
     this.attributes['time_log'] = 0;
     this.attributes['emit_ask'] = '';
     this.attributes['call_type'] = 0;
-    this.handler.state = states.STARTMODE;
     this.emit(':ask', this.t('HELP_TEXT'));
-  },
-  'Unhandled': function () {
-    this.emit(':tell', this.t('UNHANDLED_TEXT'));
-  }
-};
-
-var startModeHandler = Alexa.CreateStateHandler(states.STARTMODE, {
-  'LaunchRequest': function () {
-    this.emit(':tell', this.t('HELP_TEXT'));
   },
   'AddCommentIntent': function () {
     this.attributes['call_type'] = 1;
     this.attributes['emit_ask'] = this.t('ASK_MESSAGE_BODY');
     var intentObj = this.event.request.intent;
-    if (!intentObj.slots.TicketNumber.value) {
+    if (!intentObj.slots.TicketNumber.value ) {
       this.emit(':ask', this.t('ASK_TICKET_NUMBER'));
     } else {
       this.attributes['ticket'] = intentObj.slots.TicketNumber.value;
@@ -63,7 +49,7 @@ var startModeHandler = Alexa.CreateStateHandler(states.STARTMODE, {
   },
   'AddTimeLogIntent': function () {
     this.attributes['call_type'] = 2;
-    this.attributes['emit_ask'] = 'ASK_TIME_TO_LOG';
+    this.attributes['emit_ask'] = this.t('ASK_TIME_TO_LOG');
     var intentObj = this.event.request.intent;
     if (!intentObj.slots.TicketNumber.value) {
       this.emit(':ask', this.t('ASK_TICKET_NUMBER'));
@@ -86,7 +72,7 @@ var startModeHandler = Alexa.CreateStateHandler(states.STARTMODE, {
     if (!intentObj.slots.TimeLog.value) {
       this.emit(':ask', this.t('ASK_AGAIN'));
     } else {
-      this.attributes['ticket'] = intentObj.slots.TimeLog.value;
+      this.attributes['time_log'] = intentObj.slots.TimeLog.value;
       this.emit(':ask', this.t('ASK_MESSAGE_BODY'));
     }
   },
@@ -96,22 +82,20 @@ var startModeHandler = Alexa.CreateStateHandler(states.STARTMODE, {
       this.emit(':ask', this.t('ASK_AGAIN'));
     } else {
       this.attributes['msg'] = intentObj.slots.Message.value;
-      this.emit('Confirm');
+      if (this.attributes['call_type'] == 1) {
+        this.emit(':ask', 'Shall I add ' + this.attributes['msg'] + ' for ' + this.attributes['ticket']);
+      } else {
+        this.emit(':ask', 'Shall I log ' + this.attributes['time_log'] + ' for ' + this.attributes['ticket']);
+      }
     }
-  },
-  'Confirm': function () {
-    if (this.attributes['call_type'] == 1) {
-      this.emit(':ask', 'Shall I add ' + this.attributes['msg'] + ' on ticket number' + this.attributes['ticket']);
-    } else {
-      this.emit(':ask', 'Shall I log ' + this.attributes['time_log'] + ' on ticket number' + this.attributes['ticket']);
-    }
-
   },
   'AMAZON.YesIntent': function() {
     if (this.attributes['call_type'] == 1) {
+      //this.emit(':tell', 'Adding ' + this.attributes['msg'] + ' on ticket number' + this.attributes['ticket']);
       this.emit('AddComment');
     } else {
-      this.emit(':ask', 'Logging ' + this.attributes['time_log'] + ' on ticket number' + this.attributes['ticket']);
+      //this.emit(':tell', 'Logging ' + this.attributes['time_log'] + ' on ticket number' + this.attributes['ticket']);
+      this.emit('AddTimeLog');
     }
   },
 
@@ -122,11 +106,7 @@ var startModeHandler = Alexa.CreateStateHandler(states.STARTMODE, {
       this.emit(':ask', 'Cancel Logging ' + this.attributes['time_log'] + ' on ticket number' + this.attributes['ticket']);
     }
   },
-  'SessionEndedRequest': function () {
-    console.log('session ended!');
-    this.emit(':saveState', true);
-  },
   'Unhandled': function () {
     this.emit(':tell', this.t('UNHANDLED_TEXT'));
   }
-});
+};

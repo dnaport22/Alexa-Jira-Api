@@ -1,6 +1,15 @@
 AddTimeLogIntent log time on ticket {TicketNumber}
+AddTimeLogIntent log time on ticket number {TicketNumber}
 AddCommentIntent comment on ticket {TicketNumber}
+AddCommentIntent comment on ticket number {TicketNumber}
 AddMessageIntent say {Message}
-AddMessageIntent write {Message}
 AddTicketNumberIntent ticket number {TicketNumber}
-AddTimeIntent {TimeLog}
+AddTimeIntent I have worked for {TimeLog} hours
+AddTimeIntent I worked for {TimeLog} hours
+AddTimeIntent I worked {TimeLog} hours
+AddTimeIntent I have worked for {TimeLog} hour
+AddTimeIntent I worked for {TimeLog} hour
+AddTimeIntent I worked {TimeLog} hour
+AddTimeIntent I have worked for {TimeLog} minutes
+AddTimeIntent I worked for {TimeLog} minutes
+AddTimeIntent I worked {TimeLog} minutes
